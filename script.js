@@ -1,35 +1,38 @@
-const issueList = document.getElementById('issue-list');
-const pageNumber = document.getElementById('page-number');
-let currentPage = 1;
+const issuesList = document.getElementById("issues-list");
+      let currentPage = 1;
 
-// function to fetch and display issues
-async function displayIssues(page) {
-  const response = await fetch(`https://api.github.com/repositories/1296269/issues?page=${page}&per_page=5`);
-  const issues = await response.json();
+      // Fetch issues from the GitHub API and display them in the list
+      async function fetchIssues(pageNumber) {
+        const apiUrl = `https://api.github.com/repositories/1296269/issues?page=${pageNumber}&per_page=5`;
+        const response = await fetch(apiUrl);
+        const issues = await response.json();
+        issuesList.innerHTML = "";
+        issues.forEach((issue) => {
+          const issueItem = document.createElement("li");
+          issueItem.textContent = issue.title;
+          issuesList.appendChild(issueItem);
+        });
+      }
 
-  issueList.innerHTML = '';
-  issues.forEach(issue => {
-    const issueName = document.createElement('li');
-    issueName.textContent = issue.title;
-    issueList.appendChild(issueName);
-  });
-}
+      // Load the first page of issues on page load
+      window.addEventListener("load", () => {
+        fetchIssues(currentPage);
+      });
 
-// initial display of issues on page load
-displayIssues(currentPage);
+      // Load the previous page of issues and update the page number
+      const loadPrevButton = document.getElementById("load-prev");
+      loadPrevButton.addEventListener("click", () => {
+        if (currentPage > 1) {
+          currentPage--;
+          document.querySelector("h1").textContent = `Page number ${currentPage}`;
+          fetchIssues(currentPage);
+        }
+      });
 
-// function to handle loading next page of issues
-document.getElementById('load-prev').addEventListener('click', () => {
-  currentPage++;
-  pageNumber.textContent = `Page number ${currentPage}`;
-  displayIssues(currentPage);
-});
-
-// function to handle loading previous page of issues
-document.getElementById('load-next').addEventListener('click', () => {
-  if (currentPage > 1) {
-    currentPage--;
-    pageNumber.textContent = `Page number ${currentPage}`;
-    displayIssues(currentPage);
-  }
-});
+      // Load the next page of issues and update the page number
+      const loadNextButton = document.getElementById("load-next");
+      loadNextButton.addEventListener("click", () => {
+        currentPage++;
+        document.querySelector("h1").textContent = `Page number ${currentPage}`;
+        fetchIssues(currentPage);
+      });
