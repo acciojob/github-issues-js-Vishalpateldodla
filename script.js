@@ -19,14 +19,14 @@ async function displayIssues(page) {
 displayIssues(currentPage);
 
 // function to handle loading next page of issues
-document.getElementById('load-next').addEventListener('click', () => {
+document.getElementById('load-prev').addEventListener('click', () => {
   currentPage++;
   pageNumber.textContent = `Page number ${currentPage}`;
   displayIssues(currentPage);
 });
 
 // function to handle loading previous page of issues
-document.getElementById('load-prev').addEventListener('click', () => {
+document.getElementById('load-next').addEventListener('click', () => {
   if (currentPage > 1) {
     currentPage--;
     pageNumber.textContent = `Page number ${currentPage}`;
